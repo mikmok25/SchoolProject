@@ -1,0 +1,41 @@
+﻿@model IEnumerable<SchoolProject.Models.Teacher>
+@{
+    ViewBag.Title = "Lists";
+}
+
+<h2 class="text-danger">List of Teachers</h2>
+<p>This page should be showing information about all Articles</p>
+
+<div id="containerlist">
+    <h2>List of Teachers</h2>
+    
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">First</th>
+                    <th scope="col">Last</th>
+                    <th scope="col">Employee #</th>
+                    <th scope="col">Salary</th>
+                    <th scope="col">Hire Date</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var teacher in Model)
+                {
+                    <tr>
+                        <th scope="row">@teacher.teacherId</th>
+                        <td>@teacher.teacherFname</td>
+                        <td>@teacher.teacherLname</td>
+                        <td>@teacher.employeeNumber</td>
+                        <td>@teacher.teacherSalary</td>
+                        <td>@teacher.hireDate</td>
+
+                    </tr>
+                }
+                </tbody>
+        </table>
+    
+</div>
+
