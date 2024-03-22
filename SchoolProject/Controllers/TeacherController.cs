@@ -13,9 +13,18 @@ namespace SchoolProject.Controllers
         public ActionResult Lists()
         {
             // Should navigate to /Views/Teacher/Lists.cshtml
+            List<Teacher> Teachers = new List<Teacher>();
             TeacherDataController controller = new TeacherDataController();
-            IEnumerable<Teacher> Teachers = controller.ListTeachers();
+            //Teachers = controller.ListTeachers();
             return View(Teachers);
+        }
+
+        public ActionResult Show(int id)
+        {
+            // Should navigate to /Views/Teacher/Show.cshtml
+            TeacherDataController controller = new TeacherDataController();
+            Teacher NewTeacher = controller.FindTeacher(id);
+            return View(NewTeacher);
         }
     }
 }

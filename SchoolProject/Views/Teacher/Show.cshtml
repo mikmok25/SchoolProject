@@ -1,0 +1,34 @@
+﻿@model SchoolProject.Models.Teacher
+@{
+    ViewBag.Title = "Show";
+}
+
+<div class="d-flex justify-content-between align-items-center my-4">
+    <h2>Details page</h2>
+    <a href="/teacher/lists">Back to Teacher Lists</a>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">First</th>
+            <th scope="col">Last</th>
+            <th scope="col">Employee Number</th>
+            <th scope="col">Salary</th>
+            <th scope="col">Hire Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th scope="row">@Model.teacherId</th>
+            <td>@Model.teacherFname</td>
+            <td>@Model.teacherLname</td>
+            <td>@Model.employeeNumber</td>
+            <td>@Model.teacherSalary</td>
+            <td>@Model.hireDate</td>
+        </tr>
+    </tbody>
+</table>
+
+

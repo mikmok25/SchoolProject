@@ -9,15 +9,12 @@
 <div id="containerlist">
     <h2>List of Teachers</h2>
     
-        <table class="table">
+        <table class="table table-bordered table-striped w-25">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">First</th>
-                    <th scope="col">Last</th>
-                    <th scope="col">Employee #</th>
-                    <th scope="col">Salary</th>
-                    <th scope="col">Hire Date</th>
+                    <th>#</th>
+                    <th>Teacher Name</th>
+                 
 
                 </tr>
             </thead>
@@ -25,12 +22,8 @@
                 @foreach (var teacher in Model)
                 {
                     <tr>
-                        <th scope="row">@teacher.teacherId</th>
-                        <td>@teacher.teacherFname</td>
-                        <td>@teacher.teacherLname</td>
-                        <td>@teacher.employeeNumber</td>
-                        <td>@teacher.teacherSalary</td>
-                        <td>@teacher.hireDate</td>
+                        <th>@teacher.teacherId</th>
+                        <td><a href="/Teacher/Show/@teacher.teacherId">@teacher.teacherFname @teacher.teacherLname</a></td>
 
                     </tr>
                 }
