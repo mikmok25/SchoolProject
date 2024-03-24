@@ -21,18 +21,21 @@ namespace SchoolProject.Controllers
         // List the teacher names in the system which match teacher names, hiredate or salary.
         //</summary>
         //<returns>
-        // A lists of teachers
+        // A lists of teacher data
         //</returns>
+        // <param name="SearchKey">The key to search teachers on</param>
         //<example>
-        // GET api/TeacherData/ListTeachers -> ["Alexander Bennet", "Jane Doe", "Steve Smith", ...]
+        // GET api/TeacherData/ListTeachers -> ["1", "Alexander", "Bennet", "August 05 2016", "55.3"]
         //</example>
+
+        
 
         [HttpGet]
         [Route("api/TeacherData/ListTeachers/{SearchKey}")]
 
-        public List<Teacher> ListTeachers(string SearchKey)
+        public List<Teacher> ListTeachers( string SearchKey, string searchType)
         {
-            Debug.WriteLine("The search key is:" + SearchKey);
+
             // Create a connection to the school db
             MySqlConnection Conn = School.AccessDatabase();
 
@@ -43,8 +46,23 @@ namespace SchoolProject.Controllers
             MySqlCommand cmd = Conn.CreateCommand();
 
             // SQL QUERY
+            string query = "";
 
-            cmd.CommandText = "SELECT * FROM teachers";
+            if(searchType == "empnum")
+            {
+                query = $"SELECT * FROM teachers WHERE employeenumber LIKE @searchkey";
+            } else if (searchType == "hiredate")
+            {
+                query = $"SELECT * FROM teachers WHERE hiredate LIKE @searchkey";
+            } else
+            {
+                query = $"SELECT * FROM teachers WHERE teacherfname LIKE @searchkey OR teacherlname LIKE @searchkey";
+            }
+            cmd.CommandText = query;
+
+            cmd.Parameters.AddWithValue("@searchkey", $"%{SearchKey}%");
+
+            cmd.Prepare(); 
 
             // Gather Result from Set of Query into a variable
             MySqlDataReader ResultSet = cmd.ExecuteReader();
@@ -91,53 +109,62 @@ namespace SchoolProject.Controllers
 
         [HttpGet]
         [Route("api/TeacherData/FindTeacher/{teacherId}")]
-
         public Teacher FindTeacher(int teacherId)
         {
-            // Create a connection to database
+            // Create a connection to the database
             MySqlConnection Conn = School.AccessDatabase();
 
-            // Open the connection to DB
+            // Open the database connection
             Conn.Open();
 
-            // Create a mysql command
+            // Create a MySqlCommand object
             MySqlCommand cmd = Conn.CreateCommand();
 
-            // Using a query to access information
-
-            string query = "SELECT * FROM teachers WHERE teacherid = " + teacherId;
+            // Define the SQL query
+            string query = @"
+        SELECT t.teacherfname, t.teacherlname, c.classid, c.classcode, c.classname, c.startdate, c.finishdate
+        FROM teachers t
+        LEFT JOIN classes c ON c.teacherid = t.teacherid
+        WHERE t.teacherid = @TeacherId
+    ";
             cmd.CommandText = query;
 
-            // Run the query
+            // Add parameter for teacher ID
+            cmd.Parameters.AddWithValue("@TeacherId", teacherId);
+
+            // Execute the query
             MySqlDataReader ResultSet = cmd.ExecuteReader();
 
-            // Create Teacher Obj
-            Teacher SelectedTeacher = new Teacher();
+            // Create a Teacher object
+            Teacher selectedTeacher = new Teacher();
+            selectedTeacher.ClassesTaught = new List<Classes>();
 
-            // Put that information into Teacher obj.
-
-
+            // Read data from the result set
             while (ResultSet.Read())
             {
-                string teacherFname = ResultSet["teacherfname"].ToString();
-                string teacherLname = ResultSet["teacherlname"].ToString();
-                string employeeNumber = ResultSet["employeenumber"].ToString();
-                double teacherSalary = Convert.ToDouble(ResultSet["salary"]);
-                DateTime hireDate = Convert.ToDateTime(ResultSet["hiredate"]);
-                string formattedDate = hireDate.ToString("MMMM dd yyyy");
+                // Extract teacher information
+                selectedTeacher.teacherFname = ResultSet["teacherfname"].ToString();
+                selectedTeacher.teacherLname = ResultSet["teacherlname"].ToString();
+                selectedTeacher.teacherId = teacherId;
 
-                SelectedTeacher.teacherFname = teacherFname;
-                SelectedTeacher.teacherLname = teacherLname;
-                SelectedTeacher.teacherId = teacherId;
-                SelectedTeacher.employeeNumber = employeeNumber;
-                SelectedTeacher.teacherSalary = teacherSalary;
-                SelectedTeacher.hireDate = formattedDate;
+                // Extract class information
+                Classes cls = new Classes();
+                cls.classcode = ResultSet["classcode"].ToString();
+                cls.classname = ResultSet["classname"].ToString();
+                cls.startdate = ResultSet["startdate"].ToString();
+                cls.finishdate = ResultSet["finishdate"].ToString();
 
-
+                // Add the class to the list of teacher's classes
+                selectedTeacher.ClassesTaught.Add(cls);
             }
 
-            return SelectedTeacher;
+            // Close the database connection
+            Conn.Close();
 
+            // Return the populated Teacher object
+            return selectedTeacher;
         }
+
+
     }
 }

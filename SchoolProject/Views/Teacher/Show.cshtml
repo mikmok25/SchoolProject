@@ -4,31 +4,37 @@
 }
 
 <div class="d-flex justify-content-between align-items-center my-4">
-    <h2>Details page</h2>
+    <h2>@Model.teacherFname @Model.teacherLname</h2>
     <a href="/teacher/lists">Back to Teacher Lists</a>
 </div>
 
 <table class="table table-striped">
     <thead>
         <tr>
-            <th scope="col">#</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Employee Number</th>
-            <th scope="col">Salary</th>
-            <th scope="col">Hire Date</th>
+            <th scope="col">Class Code</th>
+            <th scope="col">Class Name</th>
+            <th scope="col">Start Date</th>
+            <th scope="col">Finish Date</th>
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <th scope="row">@Model.teacherId</th>
-            <td>@Model.teacherFname</td>
-            <td>@Model.teacherLname</td>
-            <td>@Model.employeeNumber</td>
-            <td>@Model.teacherSalary</td>
-            <td>@Model.hireDate</td>
-        </tr>
+        @if (Model.ClassesTaught == null || !Model.ClassesTaught.Any())
+        {
+            <tr>
+                <td colspan="4" class="text-center">No class found</td>
+            </tr>
+        }
+        else
+        {
+            foreach (var cls in Model.ClassesTaught)
+            {
+                <tr>
+                    <td>@cls.classcode</td>
+                    <td>@cls.classname</td>
+                    <td>@cls.startdate</td>
+                    <td>@cls.finishdate</td>
+                </tr>
+            }
+        }
     </tbody>
 </table>
-
-

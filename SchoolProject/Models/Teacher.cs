@@ -20,6 +20,8 @@ namespace SchoolProject.Models
 
         public string  hireDate { get; set; }
 
+        public List<Classes> ClassesTaught { get; set; }
+
 
 
 

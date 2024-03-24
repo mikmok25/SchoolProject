@@ -3,32 +3,57 @@
     ViewBag.Title = "Lists";
 }
 
-<h2 class="text-danger">List of Teachers</h2>
-<p>This page should be showing information about all Articles</p>
-
 <div id="containerlist">
     <h2>List of Teachers</h2>
-    
-        <table class="table table-bordered table-striped w-25">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Teacher Name</th>
-                 
 
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var teacher in Model)
+    <div class="form-container mb-3">
+        <form action="/teacher/lists" method="GET" class="d-flex align-items-center gap-3">
+            <label for="searchType">Search By: </label>
+            <select name="searchType" id="searchType">
+                <option value="name">Name</option>
+                <option value="hiredate">Hire Date</option>
+                <option value="empnum">Employee Number</option>
+            </select>
+            <input type="text" name="SearchKey" value="" />
+
+            <button>Search</button>
+        </form>
+    </div>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Employee Number</th>
+                <th>Hire Date</th>
+                <th>Salary</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Any())
+            {
+                foreach (var teacher in Model)
                 {
                     <tr>
-                        <th>@teacher.teacherId</th>
-                        <td><a href="/Teacher/Show/@teacher.teacherId">@teacher.teacherFname @teacher.teacherLname</a></td>
-
+                        <td>@teacher.teacherId</td>
+                        <td>@teacher.teacherFname</td>
+                        <td>@teacher.teacherLname</td>
+                        <td>@teacher.employeeNumber</td>
+                        <td>@teacher.hireDate</td>
+                        <td>@teacher.teacherSalary</td>
+                        <td><a href="/teacher/show/@teacher.teacherId">View</a></td>
                     </tr>
                 }
-                </tbody>
-        </table>
-    
+            }
+            else
+            {
+                <tr>
+                    <td colspan="7" class="text-center">No records found.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
-

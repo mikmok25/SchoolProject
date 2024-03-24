@@ -4,18 +4,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Diagnostics;
 
 namespace SchoolProject.Controllers
 {
     public class TeacherController : Controller
     {
         // GET: Teacher
-        public ActionResult Lists()
+        public ActionResult Lists(string SearchKey, string searchType)
         {
+            Debug.WriteLine($"The search key is:{SearchKey}");
             // Should navigate to /Views/Teacher/Lists.cshtml
             List<Teacher> Teachers = new List<Teacher>();
             TeacherDataController controller = new TeacherDataController();
-            //Teachers = controller.ListTeachers();
+            Teachers = controller.ListTeachers(SearchKey, searchType);
             return View(Teachers);
         }
 
