@@ -16,7 +16,7 @@ namespace SchoolProject.Models
 
         public string employeeNumber { get; set;}
 
-        public double teacherSalary { get; set; }
+        public decimal? teacherSalary { get; set; }
 
         public string  hireDate { get; set; }
 

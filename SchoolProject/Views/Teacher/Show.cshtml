@@ -17,24 +17,16 @@
             <th scope="col">Finish Date</th>
         </tr>
     </thead>
-    <tbody>
-        @if (Model.ClassesTaught == null || !Model.ClassesTaught.Any())
-        {
-            <tr>
-                <td colspan="4" class="text-center">No class found</td>
-            </tr>
-        }
-        else
-        {
-            foreach (var cls in Model.ClassesTaught)
+    <tbody>  
+            @foreach (var cls in Model.ClassesTaught)
             {
                 <tr>
-                    <td>@cls.classcode</td>
+                    <td>@cls.classcode.ToUpper()</td>
                     <td>@cls.classname</td>
                     <td>@cls.startdate</td>
                     <td>@cls.finishdate</td>
                 </tr>
             }
-        }
+       
     </tbody>
 </table>

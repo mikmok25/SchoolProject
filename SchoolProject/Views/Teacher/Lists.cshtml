@@ -29,7 +29,7 @@
                 <th>Employee Number</th>
                 <th>Hire Date</th>
                 <th>Salary</th>
-                <th>Details</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -44,7 +44,11 @@
                         <td>@teacher.employeeNumber</td>
                         <td>@teacher.hireDate</td>
                         <td>@teacher.teacherSalary</td>
-                        <td><a href="/teacher/show/@teacher.teacherId">View</a></td>
+                        <td class="text-center">
+                            <a href="/teacher/show/@teacher.teacherId">View</a>
+                            <a href="/Teacher/Delete/@teacher.teacherId" class="delete-teacher" data-teacher-id="@teacher.teacherId" data-teacher-fname="@teacher.teacherFname" data-teacher-lname="@teacher.teacherLname" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</a>
+
+                        </td>
                     </tr>
                 }
             }
@@ -57,3 +61,45 @@
         </tbody>
     </table>
 </div>
+
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete Teacher</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p>Are you sure you want to delete <span id="teacherName"></span>?</p>
+                <form id="deleteForm" action="/teacher/delete" method="post">
+                    <input type="hidden" id="teacherId" name="teacherId" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" form="deleteForm" class="btn btn-danger">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.delete-teacher').on('click', function () {
+                var teacherId = $(this).data('teacher-id');
+                var teacherFname = $(this).data('teacher-fname');
+                var teacherLname = $(this).data('teacher-lname');
+
+                $('#teacherId').val(teacherId);
+                $('#teacherName').text(teacherFname + ' ' + teacherLname);
+
+                $('#deleteModal').modal('show');
+            });
+        });
+    </script>
+}

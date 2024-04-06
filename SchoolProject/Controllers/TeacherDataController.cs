@@ -75,16 +75,26 @@ namespace SchoolProject.Controllers
                 // Access column information by the DB column name as index
 
                 // string TeacherName = ResultSet["teacherfname"] + " " + ResultSet["teacherlname"];
-
+                int teacherId = Convert.ToInt32(ResultSet["teacherid"]);
                 string teacherFname = ResultSet["teacherfname"].ToString();
                 string teacherLname = ResultSet["teacherlname"].ToString();
                 string employeeNumber = ResultSet["employeenumber"].ToString();
-                double teacherSalary = Convert.ToDouble(ResultSet["salary"]);
                 DateTime hireDate = Convert.ToDateTime(ResultSet["hiredate"]);
                 string formattedDate = hireDate.ToString("MMMM dd yyyy");
+                object salaryObj = ResultSet["salary"];
+                decimal teacherSalary;
+
+                if (salaryObj != DBNull.Value)
+                {
+                    teacherSalary = Convert.ToDecimal(salaryObj);
+                }
+                else
+                {
+                    // Handle the case where salary is DBNull, perhaps by assigning a default value
+                    teacherSalary = Convert.ToDecimal(0.00); // Or any other appropriate default value
+                }
 
 
-                int teacherId = Convert.ToInt32(ResultSet["teacherid"]);
 
                 Teacher newTeacher = new Teacher();
 
@@ -92,10 +102,8 @@ namespace SchoolProject.Controllers
                 newTeacher.teacherLname = teacherLname;
                 newTeacher.teacherId = teacherId;
                 newTeacher.employeeNumber = employeeNumber;
-                newTeacher.teacherSalary = teacherSalary;
                 newTeacher.hireDate = formattedDate;
-
-
+                newTeacher.teacherSalary = teacherSalary;
 
                 Teachers.Add(newTeacher);
 
@@ -125,8 +133,7 @@ namespace SchoolProject.Controllers
         SELECT t.teacherfname, t.teacherlname, c.classid, c.classcode, c.classname, c.startdate, c.finishdate
         FROM teachers t
         LEFT JOIN classes c ON c.teacherid = t.teacherid
-        WHERE t.teacherid = @TeacherId
-    ";
+        WHERE t.teacherid = @TeacherId";
             cmd.CommandText = query;
 
             // Add parameter for teacher ID
@@ -164,6 +171,53 @@ namespace SchoolProject.Controllers
             // Return the populated Teacher object
             return selectedTeacher;
         }
+
+        /// <summary>
+        /// Receives teacher information and adds it to the database
+        /// </summary>
+        /// <returns>
+        /// 
+        /// </returns>
+        /// <example>
+        /// POST localhost:xx/api/teacherdata/addteacher
+        /// FORM DATA / POST DATA / REQUEST BODY
+        /// {
+        ///     "teacherfname": "Alexander",
+        ///     "teacherlname": "Bennett"
+        /// }
+        /// </example>
+        // Add teacher
+        [HttpPost]
+        public void AddTeacher([FromBody]Teacher NewTeacher)
+        {
+
+            MySqlConnection Conn = School.AccessDatabase();
+
+            Conn.Open();
+
+            MySqlCommand cmd = Conn.CreateCommand();
+
+            string query = "INSERT INTO teachers (teacherfname, teacherlname, employeenumber, hiredate, salary) VALUES (@fname, @lname, @empnum, @hiredate, @salary)";
+
+            cmd.CommandText = query;
+
+            cmd.Parameters.AddWithValue("@fname", NewTeacher.teacherFname);
+            cmd.Parameters.AddWithValue("@lname", NewTeacher.teacherLname);
+            cmd.Parameters.AddWithValue("@empnum", NewTeacher.employeeNumber);
+            cmd.Parameters.AddWithValue("@hiredate", NewTeacher.hireDate);
+            cmd.Parameters.AddWithValue("@salary", NewTeacher.teacherSalary);
+
+            Debug.WriteLine(cmd.CommandText);
+
+            cmd.Prepare();
+            cmd.ExecuteNonQuery(); // DML operations
+
+            Conn.Close();
+
+
+        }
+
+        // Delete Teacher By its ID
 
 
     }
