@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Diagnostics;
+using MySql.Data.MySqlClient;
 
 namespace SchoolProject.Controllers
 {
@@ -40,7 +41,7 @@ namespace SchoolProject.Controllers
         // POST: Teacher / Create -> Redirects to the teachers lists page.
 
         [HttpPost]
-        public ActionResult Create(string teacherfname, string teacherlname, string employeeNumber, string hiredate, decimal? salary) 
+        public ActionResult Create(string teacherfname, string teacherlname, string employeeNumber, string hiredate, decimal? salary)
         {
 
             Teacher NewTeacher = new Teacher();
@@ -59,6 +60,24 @@ namespace SchoolProject.Controllers
 
             return RedirectToAction("Lists");
         }
+
+        // GET: Teacher/DeleteConfirm/{id} -> a webpage that ask if the user really wants to delete the specific teacher.
+
+        [HttpPost]
+        public ActionResult Delete(int id)
+        {
+            TeacherDataController controller = new TeacherDataController();
+            controller.DeleteTeacher(id);
+            return RedirectToAction("Lists");
+        }
+
+
+
+
+
+
+
+
     }
 
 

@@ -188,6 +188,7 @@ namespace SchoolProject.Controllers
         /// </example>
         // Add teacher
         [HttpPost]
+
         public void AddTeacher([FromBody]Teacher NewTeacher)
         {
 
@@ -218,7 +219,33 @@ namespace SchoolProject.Controllers
         }
 
         // Delete Teacher By its ID
+        /// <summary>
+        /// Deletes a Teacher from the connected MySQL Database if the ID of that teacher exists. Does NOT maintain relational integrity.
+        /// </summary>
+        /// <param name="id">The ID of the teacher.</param>
+        /// <example>POST /api/TeacherData/DeleteTeacher/3</example>
+        [HttpDelete]
+        [Route("api/TeacherData/DeleteTeacher/{teacherId}")]
 
+        public void DeleteTeacher(int id)
+        {
+            // Create an instance of a connection
+            MySqlConnection Conn = School.AccessDatabase();
+
+            // Open the connection between the web server and database
+            Conn.Open();
+
+            // Establish a new command (query) for our database
+            MySqlCommand cmd = Conn.CreateCommand();
+
+            // SQL QUERY
+            cmd.CommandText = "DELETE FROM teachers WHERE teacherid=@id";
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Prepare();
+
+            cmd.ExecuteNonQuery();
+            Conn.Close();
+        }
 
     }
 }
