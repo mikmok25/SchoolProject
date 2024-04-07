@@ -1,0 +1,43 @@
+﻿@model IEnumerable<SchoolProject.Models.Student>
+@{
+    ViewBag.Title = "Lists";
+}
+
+<div id="containerlist">
+    <h2 class="my-5 text-center">List of Students</h2>
+
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name </th>
+                <th>Number</th>
+                <th>Enroll Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Any())
+            {
+                foreach (var student in Model)
+                {
+                    <tr>
+                        <td>@student.studentid</td>
+                        <td>@student.studentfname</td>
+                        <td>@student.studentlname</td>
+                        <td>@student.studentnumber</td>
+                        <td>@student.enroldate</td>
+                    </tr>
+                }
+
+            }
+            else
+            {
+                <tr>
+                    <td colspan="7" class="text-center">No records found.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -7,8 +7,10 @@ namespace SchoolProject.Models
 {
     public class Classes
     {
-        public int id { get; set; }
+        public int classid { get; set; }
         public string classcode { get; set; }
+
+        public int teacherid { get; set; }
 
         public string startdate { get; set; }
 

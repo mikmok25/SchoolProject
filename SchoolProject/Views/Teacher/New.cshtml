@@ -6,8 +6,11 @@
 <h2 class="text-center">New Teacher</h2>
 
 
+
 <div class="container w-50 mx-auto my-5">
-    <form action="/Teacher/Create" method="POST">
+    <a href="/teacher/lists"><i class="fa-solid fa-arrow-left"></i> Teacher List</a>
+
+    <form action="/Teacher/Create" method="POST" class="mt-2">
         <div class="mb-3 row d-flex justify-content-center">
             <label for="teacherfname" class="form-label">First Name</label>
             <input type="text" class="form-control" id="teacherfname" name="teacherFname" required>
