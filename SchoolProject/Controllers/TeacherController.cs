@@ -41,7 +41,7 @@ namespace SchoolProject.Controllers
         // POST: Teacher / Create -> Redirects to the teachers lists page.
 
         [HttpPost]
-        public ActionResult Create(string teacherfname, string teacherlname, string employeeNumber, string hiredate, decimal? salary)
+        public ActionResult Create(string teacherfname, string teacherlname, string employeeNumber, DateTime hiredate, decimal? salary)
         {
 
             Teacher NewTeacher = new Teacher();
@@ -53,9 +53,6 @@ namespace SchoolProject.Controllers
 
             TeacherDataController DataController = new TeacherDataController();
             DataController.AddTeacher(NewTeacher);
-
-
-
 
 
             return RedirectToAction("Lists");
@@ -71,12 +68,46 @@ namespace SchoolProject.Controllers
             return RedirectToAction("Lists");
         }
 
+        // GET: /Teacher/Update/{TeacherId}
+
+        public ActionResult Update(int id)
+        {
+            TeacherDataController Controller = new TeacherDataController();
+            Teacher SelectedTeacher = Controller.FindTeacher(id);
+
+            return View(SelectedTeacher);
+        }
+
+        //POST : /teacher/edit/{Teacherid}
+
+        [HttpPost]
+        public ActionResult Edit(int id, string teacherfname, string teacherlname, string employeenumber, DateTime hiredate, decimal salary)
+        {
+            // Debug.WriteLine("The teacher firstname is " + teacherfname);
+            // Debug.WriteLine("The teacher lastname is " + teacherlname);
+            // Debug.WriteLine("The teacher employeenumber is " + employeenumber);
+            //  Debug.WriteLine("The teacher hiredate is " + hiredate);
+            // Debug.WriteLine("The teacher salary is " + salary);
+
+            TeacherDataController Controller = new TeacherDataController();
+
+            Teacher UpdatedTeacher = new Teacher();
+
+            UpdatedTeacher.teacherFname = teacherfname;
+            UpdatedTeacher.teacherLname = teacherlname;
+            UpdatedTeacher.employeeNumber = employeenumber;
+            UpdatedTeacher.hireDate = hiredate;
+            UpdatedTeacher.teacherSalary = salary;
 
 
 
+            Controller.UpdateTeacher(id, UpdatedTeacher);
+
+            // Redirects to /Teacher/Show/{id}
+            return RedirectToAction("Show/"+id);
 
 
-
+        }
 
     }
 

@@ -18,7 +18,7 @@ namespace SchoolProject.Models
 
         public decimal? teacherSalary { get; set; }
 
-        public string  hireDate { get; set; }
+        public DateTime hireDate { get; set; }
 
         public List<Classes> ClassesTaught { get; set; }
 

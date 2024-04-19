@@ -80,7 +80,6 @@ namespace SchoolProject.Controllers
                 string teacherLname = ResultSet["teacherlname"].ToString();
                 string employeeNumber = ResultSet["employeenumber"].ToString();
                 DateTime hireDate = Convert.ToDateTime(ResultSet["hiredate"]);
-                string formattedDate = hireDate.ToString("MMMM dd yyyy");
                 object salaryObj = ResultSet["salary"];
                 decimal teacherSalary;
 
@@ -102,7 +101,7 @@ namespace SchoolProject.Controllers
                 newTeacher.teacherLname = teacherLname;
                 newTeacher.teacherId = teacherId;
                 newTeacher.employeeNumber = employeeNumber;
-                newTeacher.hireDate = formattedDate;
+                newTeacher.hireDate = hireDate;
                 newTeacher.teacherSalary = teacherSalary;
 
                 Teachers.Add(newTeacher);
@@ -130,10 +129,11 @@ namespace SchoolProject.Controllers
 
             // Define the SQL query
             string query = @"
-        SELECT t.teacherfname, t.teacherlname, c.classid, c.classcode, c.classname, c.startdate, c.finishdate
-        FROM teachers t
-        LEFT JOIN classes c ON c.teacherid = t.teacherid
-        WHERE t.teacherid = @TeacherId";
+SELECT t.teacherid, t.teacherfname, t.teacherlname, t.employeenumber, t.hiredate, t.salary, c.classid, c.classcode, c.classname, c.startdate, c.finishdate
+FROM teachers t
+LEFT JOIN classes c ON c.teacherid = t.teacherid
+WHERE t.teacherid = @TeacherId";
+
             cmd.CommandText = query;
 
             // Add parameter for teacher ID
@@ -150,9 +150,15 @@ namespace SchoolProject.Controllers
             while (ResultSet.Read())
             {
                 // Extract teacher information
+                selectedTeacher.teacherId = teacherId;
                 selectedTeacher.teacherFname = ResultSet["teacherfname"].ToString();
                 selectedTeacher.teacherLname = ResultSet["teacherlname"].ToString();
-                selectedTeacher.teacherId = teacherId;
+                selectedTeacher.employeeNumber = ResultSet["employeenumber"].ToString();
+                selectedTeacher.hireDate = Convert.ToDateTime(ResultSet["hiredate"]);
+                selectedTeacher.teacherSalary = Convert.ToDecimal(ResultSet["salary"]);
+
+
+
 
                 // Extract class information
                 Classes cls = new Classes();
@@ -245,6 +251,67 @@ namespace SchoolProject.Controllers
 
             cmd.ExecuteNonQuery();
             Conn.Close();
+        }
+
+        /// <summary>
+        ///  Recieves a teacher id and updated teacher information and 
+        ///  update the corresponding teacher in the database.
+        /// </summary>
+        /// <example>
+        /// curl -d @teacher.json -H "Content-Type: application/json" http://localhost:53661/api/TeacherData/UpdateTeacher/10
+        /// POST api/TeacherData/UpdateTeacher/{teacherId}
+        /// {
+        ///     "teacherfname": "John",
+        ///     "teacherlname": "Doe",
+        ///     "employeenumber": "T445"
+        ///     "hiredate": "2021-04-15",
+        ///     "salary": 32.14
+        /// }
+        /// </example>
+        /// <returns>
+        /// 
+        /// </returns>
+
+        [HttpPost]
+        [Route("api/TeacherData/UpdateTeacher/{TeacherId}")]
+
+        public void UpdateTeacher(int TeacherId, [FromBody] Teacher UpdatedTeacher)
+        {
+            //Debug.WriteLine("Teacher First Name: " + UpdatedTeacher.teacherFname);
+            //Debug.WriteLine("Teacher Last Name: " + UpdatedTeacher.teacherLname);
+            //Debug.WriteLine("Teacher Employee Number: " + UpdatedTeacher.employeeNumber);
+            //Debug.WriteLine("Teacher Hiredate: " + UpdatedTeacher.hireDate);
+            //Debug.WriteLine("Teacher Salary: " + Convert.ToDecimal(UpdatedTeacher.teacherSalary));
+
+            string query = "UPDATE teachers SET teacherfname=@teacherfname, teacherlname=@teacherlname, employeenumber=@employeenumber, hiredate=@hiredate, salary=@salary WHERE teacherid=@teacherid";
+
+            MySqlConnection Conn = School.AccessDatabase();
+
+            Conn.Open();
+
+
+            MySqlCommand Cmd = Conn.CreateCommand();
+            
+            Cmd.CommandText = query;
+            Cmd.Parameters.AddWithValue("@teacherfname", UpdatedTeacher.teacherFname);
+            Cmd.Parameters.AddWithValue("@teacherlname", UpdatedTeacher.teacherLname);
+            Cmd.Parameters.AddWithValue("@employeenumber", UpdatedTeacher.employeeNumber);
+            Cmd.Parameters.AddWithValue("@hiredate", UpdatedTeacher.hireDate);
+            Cmd.Parameters.AddWithValue("@salary", UpdatedTeacher.teacherSalary);
+            Cmd.Parameters.AddWithValue("@teacherid", TeacherId);
+
+            Cmd.Prepare();
+
+            Cmd.ExecuteNonQuery();
+            Conn.Close();
+
+            return;
+
+
+
+
+
+
         }
 
     }

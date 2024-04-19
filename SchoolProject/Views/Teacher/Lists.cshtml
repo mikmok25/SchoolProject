@@ -44,12 +44,14 @@
                         <td>@teacher.teacherFname</td>
                         <td>@teacher.teacherLname</td>
                         <td>@teacher.employeeNumber</td>
-                        <td>@teacher.hireDate</td>
+                        <td>@teacher.hireDate.ToString("MMMM dd yyyy")</td>
                         <td>@teacher.teacherSalary</td>
                         <td class="text-center">
                             <form action="/teacher/delete/@teacher.teacherId" method="POST" class="d-flex align-items-center gap-2 text-center justify-content-center">
-                            <a href="/teacher/show/@teacher.teacherId" class="text-decoration-none"><i class="fa-solid fa-eye text-primary"></i></a>
-                                <a href="#"  data-bs-toggle="modal" data-bs-target="#deleteModal" data-teacher-id="@teacher.teacherId" class="text-decoration-none"><i class="fa-solid fa-trash text-danger"></i></a>
+                                <a href="/teacher/show/@teacher.teacherId" class="text-decoration-none"><i class="fa-solid fa-eye text-primary"></i></a>
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#deleteModal" data-teacher-id="@teacher.teacherId" class="text-decoration-none"><i class="fa-solid fa-trash text-danger"></i></a>
+                                <a href="/teacher/update/@teacher.teacherId" class="text-decoration-none"><i class="fa-solid fa-pen-to-square text-success"></i></a>
+
                             </form>
                         </td>
                     </tr>
